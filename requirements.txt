@@ -1,0 +1,5 @@
+pandas
+numpy
+html5lib
+beautifulsoup4
+lxml
