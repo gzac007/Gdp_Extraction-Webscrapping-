@@ -21,20 +21,20 @@ country_col = next(c for c in gdp.columns if "country" in str(c).lower())
 gdp_col     = next(c for c in gdp.columns if "gdp"     in str(c).lower())
 gdp = gdp.rename(columns={country_col: "Country", gdp_col: "GDP (Million USD)"})
 
-# 4) Clean text → numeric (still in millions)
+
 s = gdp["GDP (Million USD)"].astype(str)
 s = s.str.replace(",", "", regex=False)          # 1,234,567 → 1234567
 s = s.str.replace(r"[^\d.\-]", "", regex=True)   # remove symbols/footnotes
 gdp["GDP (Million USD)"] = pd.to_numeric(s, errors="coerce")
 gdp = gdp.dropna(subset=["GDP (Million USD)"]).reset_index(drop=True)
 
-# 5) Your required four steps
+
 gdp["GDP (Million USD)"] = gdp["GDP (Million USD)"].astype(int)   # (a) cast to int
 gdp["GDP (Million USD)"] = gdp["GDP (Million USD)"] / 1000        # (b) million → billion
 gdp["GDP (Million USD)"] = np.round(gdp["GDP (Million USD)"], 2)  # (c) round 2 decimals
 gdp = gdp.rename(columns={"GDP (Million USD)": "GDP (Billion USD)"})  # (d) rename
 
-# 6) Save and preview
+
 gdp.to_csv("Largest_economies.csv", index=False)
 print("Saved Largest_economies.csv")
 print(gdp.head())
